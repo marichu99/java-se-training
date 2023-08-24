@@ -31,6 +31,12 @@ public class OperatorsDemo{
             LOGGER.info("The cummulative sum is"+a);
         }
     }
+    private void comparisonOperator(){
+        int c =45;
+        int b=76;
+        boolean is_b_equalto_c= c==b;
+        LOGGER.info("The statement that c is equal to b is "+is_b_equalto_c);
+    }
     public static void main(String[] args){
         OperatorsDemo app = new OperatorsDemo();
 
@@ -38,5 +44,6 @@ public class OperatorsDemo{
         app.productOperator();
         app.modulusOPerator();
         app.assignmentOperator();
+        app.comparisonOperator();
     }
 }
