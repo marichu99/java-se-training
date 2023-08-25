@@ -37,6 +37,45 @@ public class OperatorsDemo{
         boolean is_b_equalto_c= c==b;
         LOGGER.info("The statement that c is equal to b is "+is_b_equalto_c);
     }
+    private void andlogicalOperators(){
+        int studentOneAge=25;
+        int studentTwoAge=24;
+
+        boolean isStudentOneAllowed=studentOneAge>=18;
+        boolean isStudentTwoAllowed=studentTwoAge>=18;
+
+        if(isStudentOneAllowed && isStudentTwoAllowed){
+            LOGGER.info("All students have been allowed for ID Registration");
+        }else{
+            LOGGER.info("None of the students have been allowed for ID registration");
+        }
+    }
+    private void orlogicalOperators(){
+        int studentOneAge=25;
+        int studentTwoAge=24;
+
+        boolean isStudentOneAllowed=studentOneAge>=18;
+        boolean isStudentTwoAllowed=studentTwoAge>=18;
+
+        if(isStudentOneAllowed || isStudentTwoAllowed){
+            LOGGER.info("Either students have been allowed for ID Registration");
+        }else{
+            LOGGER.info("None of the students have been allowed for ID registration");
+        }
+    }
+    private void notlogicalOperators(){
+        int studentOneAge=25;
+        int studentTwoAge=24;
+
+        boolean isStudentOneAllowed=studentOneAge>=18;
+        boolean isStudentTwoAllowed=studentTwoAge>=18;
+
+        if(!isStudentTwoAllowed){
+            LOGGER.info("Student one is not allowed");
+        }else if(!isStudentOneAllowed){
+            LOGGER.info("Student two is not allowed");
+        }
+    }
     public static void main(String[] args){
         OperatorsDemo app = new OperatorsDemo();
 
@@ -45,5 +84,7 @@ public class OperatorsDemo{
         app.modulusOPerator();
         app.assignmentOperator();
         app.comparisonOperator();
+        app.andlogicalOperators();
+        app.notlogicalOperators();
     }
 }
