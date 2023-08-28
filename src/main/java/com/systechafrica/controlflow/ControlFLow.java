@@ -10,8 +10,8 @@ public class ControlFLow{
     public void ifElseStatement(){
 
     }
-    public void switchStatement(){
-        String day= "SATURDAY";
+    public String switchStatement(String day){
+        
 
         switch(day){
             case "MONDAY":
@@ -34,9 +34,10 @@ public class ControlFLow{
                 LOGGER.info("FUN !!!");;
                 break;
         }
+        return day;
     }
     public static void main(String[] args){
         ControlFLow app = new ControlFLow();
-        app.switchStatement();
+        app.switchStatement("SATURDAY");
     }
 }

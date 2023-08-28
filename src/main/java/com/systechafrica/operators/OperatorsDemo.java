@@ -1,13 +1,15 @@
 package com.systechafrica.operators;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 
 public class OperatorsDemo{
     private static final Logger LOGGER= Logger.getLogger(OperatorsDemo.class.getName());
 
     private void arithmeticOperator(){
-        int s_1age=23;
-        int s_2age=24;
+        int s_1age=Integer.parseInt(JOptionPane.showInputDialog(null,"Enter a number"));
+        int s_2age=Integer.parseInt(JOptionPane.showInputDialog(null,"Enter another number"));
 
         int total_age=s_1age+s_2age;
         LOGGER.info("The total age is"+total_age);
