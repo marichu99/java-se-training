@@ -20,9 +20,6 @@ public class AppTest
     OperatorsDemo demo =new OperatorsDemo();
     ControlFLow flow = new ControlFLow();
 
-    void equalTo(){
-                
-    }
 
     
 

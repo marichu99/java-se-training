@@ -51,7 +51,7 @@ public class LoopingStatements {
         }
     }
     public int search( int numberToSearch){
-        for(int i=0;i<50i++){
+        for(int i=0;i<50;i++){
             if(i == numberToSearch){
                 return i;
             }

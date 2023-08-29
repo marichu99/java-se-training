@@ -17,6 +17,6 @@ public class StringClassDemo{
     }
     public static void main(String[] args){
         StringClassDemo demo = new StringClassDemo();
-
+        
     }
 }
