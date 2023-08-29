@@ -42,9 +42,26 @@ public class LoopingStatements {
             LOGGER.info("Index is"+i);
         }
     }
+    public void returnJumpStatements(){
+        for(int i=0;i<10;i++){
+            if(i == 5){
+                return;
+            }
+            LOGGER.info("Index is"+i);
+        }
+    }
+    public int search( int numberToSearch){
+        for(int i=0;i<50i++){
+            if(i == numberToSearch){
+                return i;
+            }
+        }
+        return 0;
+    }
     public static void main(String[] args){
         LoopingStatements app = new LoopingStatements();
         // app.breakJumpstatements();
-        app.continueJumpStatements();
+        // app.continueJumpStatements();
+        app.returnJumpStatements();
     }
 }
