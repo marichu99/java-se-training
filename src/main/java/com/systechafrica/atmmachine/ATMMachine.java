@@ -71,7 +71,13 @@ public class ATMMachine {
             System.out.println("Thank you for banking with us");
             // Thread.sleep(100);
             System.exit(0);
+        }else{
+            System.out.println("Please select another option");
+            
+            showMenu();
+            
         }
+        userSelection.close();
         return (0);
         
     }
