@@ -1,5 +1,8 @@
 package com.systechafrica.atmmachine;
 
+
+
+import  com.systechafrica.util.ValidateInput;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -23,6 +26,7 @@ public class ATMMachine {
                 // get the password
                 System.out.print("Enter your password: ");
                 String password=myScanner.nextLine();
+                if(ValidateInput.validate(password).equals("valis")){
                 if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) && counter <3){
                     showMenu();
                     break;
@@ -31,6 +35,9 @@ public class ATMMachine {
                 }else{
                     System.out.println("You have exhausted your attempts");
                     System.exit(0);
+                }
+                }else{
+                    System.err.println("Invalid input");
                 }
             }
             myScanner.close();
