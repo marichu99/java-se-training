@@ -26,7 +26,7 @@ public class ATMMachine {
                 // get the password
                 System.out.print("Enter your password: ");
                 String password=myScanner.nextLine();
-                if(ValidateInput.validate(password).equals("valis")){
+                if(ValidateInput.validate(password).equals("valid")){
                 if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) && counter <3){
                     showMenu();
                     break;
