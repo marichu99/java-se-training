@@ -4,10 +4,10 @@ public class MealDrinks {
     // set the prices of the different dishes
     private double teaPrice=15.0;
     private double andaziPrice=10.0;
-    private double tostiPrice=10.0;
-    private double ndenguPrice=10.0;
-    private double beansPrice=10.0;
-    private double pilauPrice=10.0;
+    private double tostiPrice=12.0;
+    private double ndenguPrice=70.0;
+    private double beansPrice=70.0;
+    private double pilauPrice=90.0;
 
     // set the strings for the different kinds of dishes
     private String teaString="1. CHAI--------------------------------15";

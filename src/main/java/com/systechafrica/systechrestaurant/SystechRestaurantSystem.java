@@ -1,6 +1,5 @@
 package com.systechafrica.systechrestaurant;
 
-import java.lang.reflect.Array;
 import java.util.Scanner;
 import java.util.Arrays;
 
@@ -9,6 +8,7 @@ public class SystechRestaurantSystem {
     private final int noTrials=3;
     private String[] foodStrings={};
     private double[] foodPrices={};
+    private int no_food_items=0;
     private Scanner myScanner = new Scanner(System.in);
     // function to login the user
     public void userLogin(){        
@@ -64,6 +64,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,teaPrice);
             foodStrings= appendString(foodStrings,teaString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish();            
         }else if(chosenInput == 2){
             // get the price of tea
@@ -72,6 +74,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,andaziPrice);
             foodStrings= appendString(foodStrings,andaziString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish(); 
         
         }else if(chosenInput ==3 ){
@@ -81,6 +85,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,tostiPrice);
             foodStrings= appendString(foodStrings,tostiString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish();         
         }else if(chosenInput == 4){
             // get the price of tea
@@ -89,6 +95,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,ndenguPrice);
             foodStrings= appendString(foodStrings,ndenguString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish(); 
         
         }else if(chosenInput == 5){
@@ -98,6 +106,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,beansPrice);
             foodStrings= appendString(foodStrings,beanString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish(); 
         
         }else if(chosenInput ==6 ){
@@ -107,6 +117,8 @@ public class SystechRestaurantSystem {
             // we create a function to append into the foodStrings and the foodPrices array
             foodPrices= appendInt(foodPrices,pilauPrice);
             foodStrings= appendString(foodStrings,pilauString);
+            // update the number of food items
+            no_food_items+=1;
             askForAnotherDish(); 
         
         }else{
@@ -139,7 +151,29 @@ public class SystechRestaurantSystem {
         }
     }
     private void makePayment() {
-
+        // set the totalPrice
+        double totalPrice = 0.0;
+        System.out.println("-------------------");
+        System.out.println("Proceed to Payment: Y");
+        System.out.println("Pay Now For: ");
+        for(int i = 0; i< no_food_items;i++){
+            // display the foodStrings
+            System.out.println(foodStrings[i]);
+            // compute the total price
+            totalPrice+=foodPrices[i];
+        }
+        System.out.println("*******************");
+        System.out.println("Total----------"+totalPrice);
+        System.out.print("Enter Amount to pay: ");
+        double amountPayable = myScanner.nextDouble();
+        // check if the amount payable is less than the total price
+        if(amountPayable >= totalPrice){
+            System.out.println("Your balance is--------------"+(amountPayable-totalPrice));
+            System.out.println("*******************");
+        }else{
+            System.out.println("Kindly pay an amount greater than "+totalPrice);
+            makePayment();
+        }
     }
     public static void main(String[] args) {
         SystechRestaurantSystem restaurantSystem = new SystechRestaurantSystem();
