@@ -26,7 +26,7 @@ public class StudentsMS {
             students[i] = s;
 
         }
-        System.out.println(students[0].toString());
+        System.out.println(students[0].getRegNo());
         System.out.println(students[1].toString());
 
         

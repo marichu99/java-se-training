@@ -14,9 +14,7 @@ public class ATMMachine {
     int BALANCE=1000;
         public void runprogram(){
             Scanner myScanner = new Scanner(System.in);         
-            
-            
-
+          
             // authenticate the credentials
             for(int counter =0;counter<3;counter++){
                 // login funtion
