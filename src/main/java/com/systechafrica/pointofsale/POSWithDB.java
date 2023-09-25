@@ -1,8 +1,16 @@
 package com.systechafrica.pointofsale;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
-public class PointOfSale {
+import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
+
+public class POSWithDB implements ItemController{
 
     private final String PASSWORD="Admin123";
     private final int NO_TRIALS=3;
@@ -14,7 +22,7 @@ public class PointOfSale {
     private double customerAmount=0.0;
     private Scanner myScanner = new Scanner(System.in);
     // function to login the user
-    public void userLogin(){        
+    public void userLogin() throws MyCustomExpception{        
         for(int i=0;i<=NO_TRIALS+1;i++){
             // request for the credentials           
             System.out.print("Enter your password: ");
@@ -29,8 +37,7 @@ public class PointOfSale {
                     System.out.println("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
                 }
             }else{
-                System.out.println("You have maxed out your trials");
-                System.exit(0);
+                throw new MyCustomExpception("You have maxed out your trials");
             }
         }
     }
@@ -143,7 +150,21 @@ public class PointOfSale {
             myScanner.nextLine();
             double totalPrice=(double)quantity*(double)unitPrice;
             Item item = new Item(itemName,itemCode, quantity, unitPrice,totalPrice);
-            items[i]=item;
+            // now let us add the item to the database
+            String sqlCreate ="CREATE TABLE IF NOT EXISTS items(item_id INT AUTO_INCREMENT PRIMARY KEY, item_name VARCHAR(255) NOT NULL, item_price INT(11), item_quantity INT(11)), ENGINE=INNODB;";
+            int result = executeUpdate(sqlCreate);
+            if(result == 1){
+                System.out.println(result+ "is the result");
+                items[i]=item;
+                // if the table exists, then we shall update the table in the database
+                String sqlInsert ="INSERT INTO items(item_id,item_name,item_price,item_quantity) VALUES(?,?,?,?);";
+                int preparedStatement =prepare(sqlInsert,item);
+                if(preparedStatement>0){
+                    System.out.println("This item has been added to the database successfully");
+                }
+            }else{
+                System.out.println(sqlCreate);
+            }        
         }
         
         // set the item object
@@ -153,6 +174,7 @@ public class PointOfSale {
         System.out.println("******************************");
         System.out.println("Item has been added successfuly");
         System.out.println("******************************");
+        
         // close the scanner
         makePayment(true,items,nItems);        
         showMenu();        
@@ -175,5 +197,66 @@ public class PointOfSale {
          * 
          */
         
+    }
+    @Override
+    public void close() {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public Connection connect() {
+        // TODO Auto-generated method stub
+        String url ="jbdc:mysql://localhost:3308/javase";
+        String user ="javase";
+        String password = "javase";
+        try {
+            Connection connection = DriverManager.getConnection(url, user, password);
+            return connection;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("The SQL error is "+e.getMessage());
+        }
+        return null;        
+    }
+    @Override
+    public Item createItem(Item item) {
+        //  we have to look for the scanner to enter the items
+        
+        // TODO Auto-generated method stub
+        return null;
+        
+    }
+    @Override
+    public int executeUpdate(String query) {
+        try {
+            Statement statement = connect().createStatement();
+            return statement.executeUpdate(query);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+           System.out.println("The SQL exception is "+e.getMessage());
+        }
+        return 0;
+    }
+    @Override
+    public ResultSet exequteQuery(String query) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public int prepare(String query,Item item) {
+        // TODO Auto-generated method stub
+        try {
+            PreparedStatement preparedStatement = connect().prepareStatement(query);
+            preparedStatement.setInt(1, item.getItemCode()); 
+            preparedStatement.setString(1, item.getItemName());
+            preparedStatement.setDouble(3, item.getUnitPrice());
+            preparedStatement.setDouble(4,item.getQuantity());
+            int affectedRows = preparedStatement.executeUpdate();
+            return affectedRows;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("The SQL exception is: "+e.getMessage());
+        }
+        return 0;
     }
 }
