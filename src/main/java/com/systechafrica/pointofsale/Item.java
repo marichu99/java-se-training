@@ -1,17 +1,17 @@
 package com.systechafrica.pointofsale;
 
 
-public class Items {
+public class Item {
     private int itemCode;
     private int quantity;
     private double unitPrice;
     private String itemName;
     private Object[] items;
     private double prices;
-    public Items(){
+    public Item(){
 
     }
-    public Items(String itemName, int itemCode, int quantity, int unitPrice, double prices){
+    public Item(String itemName, int itemCode, int quantity, int unitPrice, double prices){
         this.itemName=itemName;
         this.itemCode=itemCode;
         this.quantity=quantity;

@@ -12,6 +12,13 @@ public class ExceptionHandlingDemo {
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
+        try {
+            calculator.sum(12,12);
+        } catch (MyCustomExpception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         System.out.println("processing .......");
+
     }    
 }

@@ -5,17 +5,17 @@ import java.util.Scanner;
 public class PointOfSale {
 
     private final String PASSWORD="Admin123";
-    private final int noTrials=3;
+    private final int NO_TRIALS=3;
     private double totalPrice=0.0;
     private double pricePerItem=0.0;
     private double change=0.0;
-    private Items[] this_items=null; 
-    private int no_items=0;
+    private Item[] thisItems=null; 
+    private int noItems=0;
     private double customerAmount=0.0;
     private Scanner myScanner = new Scanner(System.in);
     // function to login the user
     public void userLogin(){        
-        for(int i=0;i<=noTrials+1;i++){
+        for(int i=0;i<=NO_TRIALS+1;i++){
             // request for the credentials           
             System.out.print("Enter your password: ");
             String inputPass=myScanner.nextLine();
@@ -26,7 +26,7 @@ public class PointOfSale {
                     showMenu();
                     break;
                 }else{
-                    System.out.println("Invalid Login please try again, you have "+(noTrials-i)+" trials left");
+                    System.out.println("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
                 }
             }else{
                 System.out.println("You have maxed out your trials");
@@ -50,21 +50,24 @@ public class PointOfSale {
     }
     private void displayReceipt() {
         
-        if(this_items == null){
+        if(thisItems == null){
+            // if someone wants to show receipt without selecting any items, the thisItems object would be null
             System.out.println("******************************");
             System.out.println("Kindly add an item first");
             System.out.println("******************************");
             showMenu();
+        // if someine wants to show a receipt without paying, the customerAmount variable would ideally be zero as specified in the makePayment() function 
         }else if((customerAmount>0) == false){
+            System.out.println("amount has not been entered");
             System.out.println("******************************");
             System.out.println("Kindly make payment first");
             System.out.println("******************************");
             showMenu();
         }else{
             System.out.println("Item Code   Quantity   Unit Price   TotalValue");
-            // I set no_items as a global variable and thi_items too, which tracks the items that were set during the adding of an item
-            for(int i=0;i<no_items;i++){
-                System.out.println(this_items[i].getItemCode()+"              "+this_items[i].getQuantity()+"           "+this_items[i].getUnitPrice()+"                 "+this_items[i].getTotalPrices());
+            // I set noItems as a global variable and thi_items too, which tracks the items that were set during the adding of an item
+            for(int i=0;i<noItems;i++){
+                System.out.println(thisItems[i].getItemCode()+"              "+thisItems[i].getQuantity()+"           "+thisItems[i].getUnitPrice()+"                 "+thisItems[i].getTotalPrices());
             }
             System.out.println("*******************************************************************");
             System.out.println("Total:      "+totalPrice);
@@ -91,11 +94,11 @@ public class PointOfSale {
         }
     }
     // }
-    private void makePayment(boolean fromAddItem,Items[] items,int n_items) {
+    private void makePayment(boolean fromAddItem,Item[] items,int nItems) {
         // set the total price variable
-        if(n_items>0 && fromAddItem == true){            
+        if(nItems>0 && fromAddItem == true){            
             // get the length of the array
-            for(int i=0;i<n_items;i++){
+            for(int i=0;i<nItems;i++){
                 pricePerItem=(items[i].getUnitPrice()*items[i].getQuantity());
                 totalPrice+=pricePerItem;
             }
@@ -105,11 +108,11 @@ public class PointOfSale {
             double amountPaid = myScanner.nextDouble();
             if(amountPaid > totalPrice){
                 change = amountPaid-totalPrice;
-                // customerAmount=amountPaid;
+                customerAmount=amountPaid;
             }else{
                 // prompt the user to enter the full amount perpetually
                 while(amountPaid<totalPrice){
-                    System.out.print("Kindly enter pay a value equal to KSHS: "+totalPrice);
+                    System.out.print("Kindly enter pay a value equal to KSHS: "+totalPrice+": ");
                     amountPaid=myScanner.nextDouble();
                 }
             }
@@ -126,10 +129,10 @@ public class PointOfSale {
     }
     private void addItem() {
         System.out.print("How many items do you want to enter: ");
-        int n_items=myScanner.nextInt();
+        int nItems=myScanner.nextInt();
         myScanner.nextLine();
-        Items[] items= new Items[n_items];
-        for(int i=0;i<n_items;i++){
+        Item[] items= new Item[nItems];
+        for(int i=0;i<nItems;i++){
             System.out.print("Enter the item Name "+(i+1)+": ");
             String itemName=myScanner.nextLine();
             System.out.print("Enter the item Code "+(i+1)+": ");
@@ -140,19 +143,19 @@ public class PointOfSale {
             int unitPrice=myScanner.nextInt();
             myScanner.nextLine();
             double totalPrice=(double)quantity*(double)unitPrice;
-            Items item = new Items(itemName,itemCode, quantity, unitPrice,totalPrice);
+            Item item = new Item(itemName,itemCode, quantity, unitPrice,totalPrice);
             items[i]=item;
         }
         
         // set the item object
-        this_items=items;
+        thisItems=items;
         // set the number of items
-        no_items=n_items;
+        noItems=nItems;
         System.out.println("******************************");
         System.out.println("Item has been added successfuly");
         System.out.println("******************************");
         // close the scanner
-        makePayment(true,items,n_items);        
+        makePayment(true,items,nItems);        
         showMenu();        
         
            
@@ -165,6 +168,13 @@ public class PointOfSale {
         pos.userLogin();
 
         // myscanner.close();
+        /* 
+         * 1. Create a reviewed ammendment of your POS system
+         * 2. Handle exceptions of your user Input using custom exceptions classes
+         * 3. Connect to the database
+         * 4. Log to the file(log.txt) using date time |level|method|message|exception
+         * 
+         */
         
     }
 }

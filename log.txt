@@ -1,0 +1,1 @@
+2023-09-24 23:02:13 | main | SEVERE | Unable to obtain connection to the database: Access denied for user 'javase'@'localhost' (using password: YES)
