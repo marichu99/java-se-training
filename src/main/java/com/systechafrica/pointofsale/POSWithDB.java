@@ -207,8 +207,8 @@ public class POSWithDB implements ItemController{
     public Connection connect() {
         // TODO Auto-generated method stub
         String url ="jbdc:mysql://localhost:3308/javase";
-        String user ="javase";
-        String password = "javase";
+        String user ="root";
+        String password = "root";
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
             return connection;

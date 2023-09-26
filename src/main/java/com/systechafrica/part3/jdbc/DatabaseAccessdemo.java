@@ -27,17 +27,17 @@ public class DatabaseAccessdemo {
             // STep 1 add postgress to the pom.xml file
             fileHandler.setFormatter(formatter);
 
-            Class.forName("com.mysql.jbdc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             // Step 3create a connnection to the database
-            String connvectionUrl="jbdc:mysql://localhost:3308/javase";
-            String user= "javase";
-            String password="javase";
+            String connvectionUrl="jdbc:mysql://localhost:3306/mabera";
+            String user= "root";
+            String password="";
             // Create connection
             Connection connection = DriverManager.getConnection(connvectionUrl, user, password);
             
             // create a statement from the connection
             Statement statement = connection.createStatement();
-            String sqlQuery="CREATE TABLE IF NOT EXISTS tasks(task_id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, start_date DATE, due_date DATE,status TINYINT NOT NULL,priority TINYINT NOT NULL, description VARCHAR(255) NOT NULL),ENGINE=INNODB;";
+            String sqlQuery="CREATE TABLE IF NOT EXISTS tasks(task_id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, start_date DATE, due_date DATE,status TINYINT NOT NULL,priority TINYINT NOT NULL, description VARCHAR(255) NOT NULL);";
 
             int noOfUpdatedFields=statement.executeUpdate(sqlQuery);
             LOGGER.info("The number of Uodated fields are: "+noOfUpdatedFields);
@@ -82,25 +82,26 @@ public class DatabaseAccessdemo {
         }catch(ClassNotFoundException e){
             LOGGER.severe("Unable to obtain class for the JDBC driver: "+e.getMessage());
         }catch(SQLException e){
-            LOGGER.severe("null");
+            LOGGER.severe("The sql exception is "+e.getMessage());
         }
+
 
     }
 
     private static Tasks getTaskFromUser(Scanner myScanner) {
-        System.out.print("Enter the title");
+        System.out.print("Enter the title: ");
         String title = myScanner.nextLine();
-        System.out.print("Enter the start date");
+        System.out.print("Enter the start date: ");
         LocalDate startDate = LocalDate.parse(myScanner.nextLine());
-        System.out.print("Enter the Due date");
+        System.out.print("Enter the Due date: ");
         LocalDate dueDate= LocalDate.parse(myScanner.nextLine());
-        System.out.print("Enter the Status");
+        System.out.print("Enter the Status: ");
         int status = myScanner.nextInt();
-        System.out.print("Enter the priority level");
+        System.out.print("Enter the priority level: ");
         int priority = myScanner.nextInt();
         // remove /n as a result of nextInt()
         myScanner.nextLine();
-        System.out.print("Enter the item description");
+        System.out.print("Enter the item description: ");
         String description = myScanner.nextLine();
 
         // create an object of the task class and pass the values from the console to its constructor

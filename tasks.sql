@@ -1,4 +1,5 @@
-CREATE TABLE IF NOT EXISTS tasks(task_id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, start_date DATE, due_date DATE,status TINYINT NOT NULL,priority TINYINT NOT NULL, description VARCHAR(255) NOT NULL),ENGINE=INNODB;
+-- Active: 1695745578788@@127.0.0.1@3306
+CREATE TABLE IF NOT EXISTS tasks(task_id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255) NOT NULL, start_date DATE, due_date DATE,status TINYINT NOT NULL,priority TINYINT NOT NULL, description VARCHAR(255) NOT NULL);
 
 INSERT INTO TASKS(title,start_date,due_date,status,priority,description) VALUES(?,?,?,?,?,?);
 
@@ -6,3 +7,10 @@ INSERT INTO TASKS(title,start_date,due_date,status,priority,description) VALUES(
 CREATE TABLE IF NOT EXISTS items(item_id INT AUTO_INCREMENT PRIMARY KEY, item_name VARCHAR(255) NOT NULL, item_price INT(11), item_quantity INT(11)), ENGINE=INNODB;
 -- PREPARED STATEMENT FOR THE ITEM TABLE
 INSERT INTO items(item_id,item_name,item_price,item_quantity) VALUES(?,?,?,?);
+
+-- LET US CREATE A USER'S TABLE FOR THOSE WHO NEED TO ACCESS THE POS SYSTEM_USER
+CREATE TABLE IF NOT EXISTS users(user_id INT AUTO_INCREMENT PRIMARY KEY, user_name VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL);
+-- INSERT INTO THE USER'S TABLE MASK
+INSERT INTO items(user_id,user_name,password) VALUES(?,?,?);
+
+
