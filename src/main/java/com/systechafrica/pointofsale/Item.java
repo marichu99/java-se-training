@@ -11,6 +11,13 @@ public class Item {
     public Item(){
 
     }
+    
+    public Item(int quantity, double unitPrice, String itemName) {
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.itemName = itemName;
+    }
+
     public Item(String itemName, int itemCode, int quantity, int unitPrice, double prices){
         this.itemName=itemName;
         this.itemCode=itemCode;

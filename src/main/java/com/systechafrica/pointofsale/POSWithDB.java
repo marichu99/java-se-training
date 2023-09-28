@@ -141,30 +141,14 @@ public class POSWithDB implements ItemController{
         for(int i=0;i<nItems;i++){
             System.out.print("Enter the item Name "+(i+1)+": ");
             String itemName=myScanner.nextLine();
-            System.out.print("Enter the item Code "+(i+1)+": ");
-            int itemCode=myScanner.nextInt();
             System.out.print("Enter the item Quantity "+(i+1)+": ");
             int quantity=myScanner.nextInt();
             System.out.print("Enter the item Price "+(i+1)+": ");
             int unitPrice=myScanner.nextInt();
             myScanner.nextLine();
             double totalPrice=(double)quantity*(double)unitPrice;
-            Item item = new Item(itemName,itemCode, quantity, unitPrice,totalPrice);
-            // now let us add the item to the database
-            String sqlCreate ="CREATE TABLE IF NOT EXISTS items(item_id INT AUTO_INCREMENT PRIMARY KEY, item_name VARCHAR(255) NOT NULL, item_price INT(11), item_quantity INT(11)), ENGINE=INNODB;";
-            int result = executeUpdate(sqlCreate);
-            if(result == 1){
-                System.out.println(result+ "is the result");
-                items[i]=item;
-                // if the table exists, then we shall update the table in the database
-                String sqlInsert ="INSERT INTO items(item_id,item_name,item_price,item_quantity) VALUES(?,?,?,?);";
-                int preparedStatement =prepare(sqlInsert,item);
-                if(preparedStatement>0){
-                    System.out.println("This item has been added to the database successfully");
-                }
-            }else{
-                System.out.println(sqlCreate);
-            }        
+            // Item item = new Item(itemName, quantity, unitPrice,totalPrice);
+            // getItem(item);            
         }
         
         // set the item object
@@ -177,11 +161,15 @@ public class POSWithDB implements ItemController{
         
         // close the scanner
         makePayment(true,items,nItems);        
-        showMenu();        
+        showMenu();    
         
            
         
              
+    }
+    // method to get the added item from another class
+    public Item getItem(Item item){
+        return item;
     }
     public static void main(String[] args) {
         // Scanner myscanner= new Scanner(System.in);
@@ -243,14 +231,11 @@ public class POSWithDB implements ItemController{
         return null;
     }
     @Override
-    public int prepare(String query,Item item) {
+    public int prepare(String query,Scanner myScanner) {
         // TODO Auto-generated method stub
         try {
             PreparedStatement preparedStatement = connect().prepareStatement(query);
-            preparedStatement.setInt(1, item.getItemCode()); 
-            preparedStatement.setString(1, item.getItemName());
-            preparedStatement.setDouble(3, item.getUnitPrice());
-            preparedStatement.setDouble(4,item.getQuantity());
+       
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows;
         } catch (SQLException e) {
