@@ -1,16 +1,14 @@
 package com.systechafrica.pointofsale;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
+import com.systechafrica.util.ValidateInput;
 
-public class POSWithDB implements ItemController{
+public class POSWithDB {
 
     private final String PASSWORD="Admin123";
     private final int NO_TRIALS=3;
@@ -20,24 +18,50 @@ public class POSWithDB implements ItemController{
     private Item[] thisItems=null; 
     private int noItems=0;
     private double customerAmount=0.0;
+    private String dbPassword;
     private Scanner myScanner = new Scanner(System.in);
     // function to login the user
-    public void userLogin() throws MyCustomExpception{        
-        for(int i=0;i<=NO_TRIALS+1;i++){
-            // request for the credentials           
-            System.out.print("Enter your password: ");
-            String inputPass=myScanner.nextLine();
-            // passInput.nextLine(); // to remove the escape sequence /n
-            if(i<=3){
-                if(inputPass.equals(PASSWORD)){
-                    System.out.println("Welcome to the System");
-                    showMenu();
-                    break;
+    public void userLogin() throws MyCustomExpception{   
+        // we will use the userDBPractice because it implements an interface that has outlined most of the DB methods
+        UserDBPractice db = new UserDBPractice();   
+        // this functionality below is used to add a new user to the database
+        System.out.print("Enter your user name: ");
+        String inputUserName = myScanner.nextLine();
+        // request for the credentials           
+        System.out.print("Enter your password: ");
+        String inputPass=myScanner.nextLine();        
+        // push this data to the db
+        String insertQuery = "INSERT INTO users(user_name,password) VALUES("+inputUserName+","+inputPass+");";
+        int noInsertedRecords = db.executeUpdate(insertQuery);  
+        // if we have inserted the record then we can now login
+        if(noInsertedRecords >0){
+            System.out.println("*************************************");
+            System.out.println("You have successfully made an account");
+            System.out.println("*************************************");
+            System.out.println("Kindly enter your password "+inputUserName);
+            // let us retrieve the password of the username
+            String selectPassQuery = "SELECT password FROM users WHERE user_name = "+inputUserName;
+            ResultSet passResult = db.exequteQuery(selectPassQuery);
+            try {
+                dbPassword = passResult.getString("password");
+            } catch (SQLException e) {
+                System.out.println("The SQL Exception is "+e.getMessage());
+            }
+            for(int i=0;i<=NO_TRIALS+1;i++){        
+                if(i<=3){                    
+                    // lets ask the user for the password
+                    System.out.print("Enter your password");
+                    String inputPassword = myScanner.nextLine();
+                    if(ValidateInput.validate(inputPassword).equals(dbPassword)){
+                        System.out.println("Welcome to the System");
+                        showMenu();
+                        break;
+                    }else{
+                        System.out.println("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
+                    }
                 }else{
-                    System.out.println("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
+                    throw new MyCustomExpception("You have maxed out your trials");
                 }
-            }else{
-                throw new MyCustomExpception("You have maxed out your trials");
             }
         }
     }
@@ -186,62 +210,9 @@ public class POSWithDB implements ItemController{
          */
         
     }
-    @Override
-    public void close() {
-        // TODO Auto-generated method stub
-        
-    }
-    @Override
-    public Connection connect() {
-        // TODO Auto-generated method stub
-        String url ="jbdc:mysql://localhost:3308/javase";
-        String user ="root";
-        String password = "root";
-        try {
-            Connection connection = DriverManager.getConnection(url, user, password);
-            return connection;
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            System.out.println("The SQL error is "+e.getMessage());
-        }
-        return null;        
-    }
-    @Override
-    public Item createItem(Item item) {
-        //  we have to look for the scanner to enter the items
-        
-        // TODO Auto-generated method stub
-        return null;
-        
-    }
-    @Override
-    public int executeUpdate(String query) {
-        try {
-            Statement statement = connect().createStatement();
-            return statement.executeUpdate(query);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-           System.out.println("The SQL exception is "+e.getMessage());
-        }
-        return 0;
-    }
-    @Override
-    public ResultSet exequteQuery(String query) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    @Override
-    public int prepare(String query,Scanner myScanner) {
-        // TODO Auto-generated method stub
-        try {
-            PreparedStatement preparedStatement = connect().prepareStatement(query);
-       
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows;
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            System.out.println("The SQL exception is: "+e.getMessage());
-        }
-        return 0;
-    }
+ 
+ 
+   
+    
+    
 }

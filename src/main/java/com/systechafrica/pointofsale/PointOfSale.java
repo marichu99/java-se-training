@@ -57,7 +57,7 @@ public class PointOfSale {
             System.out.println("******************************");
             showMenu();
         // if someine wants to show a receipt without paying, the customerAmount variable would ideally be zero as specified in the makePayment() function 
-        }else if((customerAmount>0) == false){
+        }else if(!(customerAmount>0)){
             System.out.println("******************************");
             System.out.println("Kindly make payment first");
             System.out.println("******************************");

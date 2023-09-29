@@ -2,6 +2,7 @@ package com.systechafrica.atmmachine;
 
 
 
+import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
 import  com.systechafrica.util.ValidateInput;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -24,18 +25,23 @@ public class ATMMachine {
                 // get the password
                 System.out.print("Enter your password: ");
                 String password=myScanner.nextLine();
-                if(ValidateInput.validate(password).equals("valid")){
-                if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) && counter <3){
-                    showMenu();
-                    break;
-                }else if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) == false && counter<3){
-                    System.out.println("You have used "+(counter+1)+" of 3 attempts");
-                }else{
-                    System.out.println("You have exhausted your attempts");
-                    System.exit(0);
-                }
-                }else{
-                    System.err.println("Invalid input");
+                try {
+                    if(ValidateInput.validate(password).equals("valid")){
+                        if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) && counter <3){
+                            showMenu();
+                            break;
+                        }else if((username.equals(DB_USERNAME) && password.equals(DB_PASSWORD)) == false && counter<3){
+                            System.out.println("You have used "+(counter+1)+" of 3 attempts");
+                        }else{
+                            System.out.println("You have exhausted your attempts");
+                            System.exit(0);
+                        }
+                        }else{
+                            System.err.println("Invalid input");
+                        }
+                } catch (MyCustomExpception e) {
+                    // TODO Auto-generated catch block
+                    System.out.println("The Custom Exception is "+e.getMessage());
                 }
             }
             myScanner.close();

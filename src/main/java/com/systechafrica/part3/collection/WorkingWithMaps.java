@@ -31,6 +31,7 @@ public class WorkingWithMaps {
 
         // loop throught the hashmap
         Set<Entry<String, List<String>>> entrySet = studentMap.entrySet();
+        Set<String> keySet = studentMap.keySet();
 
         for(Entry<String, List<String>> record:entrySet){
             System.out.println(record.getKey() +" => "+record.getValue());
