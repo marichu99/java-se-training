@@ -1,17 +1,22 @@
 package com.systechafrica.pointofsale;
 
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
+import com.systechafrica.part3.logging.CustomFormatter;
 import com.systechafrica.util.ValidateInput;
 
 public class POSWithDB {
 
-    private final String PASSWORD="Admin123";
+    // private final String PASSWORD="Admin123";
     private final int NO_TRIALS=3;
     private double totalPrice=0.0;
     private double pricePerItem=0.0;
@@ -21,6 +26,9 @@ public class POSWithDB {
     private double customerAmount=0.0;
     private String dbPassword;
     private Scanner myScanner = new Scanner(System.in);
+
+
+    private static final Logger LOGGER = Logger.getLogger(POSWithDB.class.getName());
     // function to login the user
     public void userLogin() throws MyCustomExpception{   
         // we will use the userDBPractice because it implements an interface that has outlined most of the DB methods
@@ -37,7 +45,7 @@ public class POSWithDB {
         // if we have inserted the record then we can now login
         if(noInsertedRecords >0){
             System.out.println("*************************************");
-            System.out.println("You have successfully made an account");
+            LOGGER.severe("You have successfully made an account");
             System.out.println("*************************************");
             System.out.println("Kindly enter your password "+inputUserName);
             // let us retrieve the password of the username
@@ -48,7 +56,7 @@ public class POSWithDB {
                     dbPassword = passResult.getString("password");
                 }
             } catch (SQLException e) {
-                System.out.println("The SQL Exception is "+e.getMessage());
+                LOGGER.severe("The SQL Exception is "+e.getMessage());
             }
             for(int i=0;i<=NO_TRIALS+1;i++){        
                 if(i<=3){                    
@@ -60,7 +68,7 @@ public class POSWithDB {
                         showMenu();
                         break;
                     }else{
-                        System.out.println("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
+                        LOGGER.severe("Invalid Login please try again, you have "+(NO_TRIALS-i)+" trials left");
                     }
                 }else{
                     throw new MyCustomExpception("You have maxed out your trials");
@@ -84,7 +92,7 @@ public class POSWithDB {
             takeInput(chosenInput);
         } catch (MyCustomExpception e) {
             // TODO Auto-generated catch block
-            System.out.println("The SQL Exception is "+e.getMessage());
+            LOGGER.severe("The Exception is "+e.getMessage());
         }
 
     }
@@ -129,23 +137,27 @@ public class POSWithDB {
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            System.out.println("The SQL Exception is "+e.getMessage());
+            LOGGER.severe("The SQL Exception is "+e.getMessage());
         }
     }
 
     private void takeInput(int chosenInput) throws MyCustomExpception{
-        if(ValidateInput.validateInt(chosenInput) == 1){
-            addItem();
-        }else if(ValidateInput.validateInt(chosenInput) ==2){
-            makePayment(false,null,0);
-        }else if(ValidateInput.validateInt(chosenInput) == 3){
-            displayReceipt();
-        }else if(ValidateInput.validateInt(chosenInput) == 4){
-            displayPurchases();
-        }else{
-            System.out.println("******************************");
-            System.out.println("Invalid choice, choose another option");
-            showMenu();
+        try{
+            if(ValidateInput.validateInt(chosenInput) == 1){
+                addItem();
+            }else if(ValidateInput.validateInt(chosenInput) ==2){
+                makePayment(false,null,0);
+            }else if(ValidateInput.validateInt(chosenInput) == 3){
+                displayReceipt();
+            }else if(ValidateInput.validateInt(chosenInput) == 4){
+                displayPurchases();       
+            }else{
+                System.out.println("*************************************");
+                System.out.println("Invalid choice, choose another option");
+                showMenu();
+            }
+        }catch(InputMismatchException e){
+            LOGGER.severe("Kindly enter a numerical value");
         }
     }
     // }
@@ -213,10 +225,24 @@ public class POSWithDB {
     public static void main(String[] args) {
         // Scanner myscanner= new Scanner(System.in);
         POSWithDB pos = new POSWithDB();
+        FileHandler fileHandler;
+        try {
+            fileHandler = new FileHandler("log.txt");
+            CustomFormatter formatter = new CustomFormatter();
+            LOGGER.addHandler(fileHandler);
+            fileHandler.setFormatter(formatter);
+        } catch (SecurityException e) {
+            // TODO Auto-generated catch block
+            LOGGER.severe("The Security Exception is "+e.getMessage());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            LOGGER.severe("The IOException is "+e.getMessage());
+        }
+        
         try {
             pos.userLogin();
         } catch (MyCustomExpception e) {
-            System.out.println("The custom exception is "+e.getMessage());
+            LOGGER.severe    ("The custom exception is "+e.getMessage());
         }
 
         // myscanner.close();
