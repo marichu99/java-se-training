@@ -6,9 +6,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ItemDB implements ItemController{
+    private List<Item> madeItems = null;
+    public List<Item> getMadeItems() {
+        return madeItems;
+    }
+
+    public void setMadeItems(List<Item> madeItems) {
+        this.madeItems = madeItems;
+    }
+
     public static void main(String[] args) {
         Scanner myScanner = new Scanner(System.in);
         ItemDB db = new ItemDB();
@@ -44,7 +55,7 @@ public class ItemDB implements ItemController{
         int quantity=myScanner.nextInt();        
         myScanner.nextLine();
         Item item = new Item(quantity, unitPrice,itemName);                    
-        
+        // set the made item variable
         return item;
     }
 
@@ -94,8 +105,15 @@ public class ItemDB implements ItemController{
 
     @Override
     public ResultSet exequteQuery(String query) {
-
-        // ResultSet resultSet =connect().executeQuery(query);
+        // create a statement first
+        Statement statement;
+        try {
+            statement = connect().createStatement();
+            ResultSet resultSet =statement.executeQuery(query);
+            return resultSet;
+        } catch (SQLException e) {
+            System.out.println("The SQL Exception is "+e.getMessage());
+        }       
         return null;
     }
 
@@ -110,6 +128,9 @@ public class ItemDB implements ItemController{
             System.out.print("How many items do you want to enter: ");
             int nItems=myScanner.nextInt();
             myScanner.nextLine();
+            // set the number of items to be set 
+            // Item[] items = new Item[nItems];
+            List<Item> items = new ArrayList<>();
             for(int i=0;i<nItems;i++){ 
                 Item item = makeItem(myScanner,i);
                 System.out.println(item.getItemName());
@@ -120,13 +141,16 @@ public class ItemDB implements ItemController{
                 preparedStatement.setInt(3, item.getQuantity());
 
                 int noOFResults = preparedStatement.executeUpdate();
+                // append the items to the local list of items array
+                items.add(i, item);
                 affectedRows+=noOFResults;
             }
+            // let us set the madeItems
+            setMadeItems(items);
             return affectedRows;
         } catch (SQLException e) {
             System.out.println("The SQL exception is "+e.getMessage());
         }
-
         
         return 0;
     }

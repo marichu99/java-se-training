@@ -3,6 +3,7 @@ package com.systechafrica.pointofsale;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
@@ -15,7 +16,7 @@ public class POSWithDB {
     private double totalPrice=0.0;
     private double pricePerItem=0.0;
     private double change=0.0;
-    private Item[] thisItems=null; 
+    private List<Item> thisItems=null; 
     private int noItems=0;
     private double customerAmount=0.0;
     private String dbPassword;
@@ -75,10 +76,16 @@ public class POSWithDB {
         System.out.println("1. Add item");
         System.out.println("2. Make payment");
         System.out.println("3. Display receipt");
-        System.out.print("Choose an option [1-3] :");
+        System.out.println("4. Get purchases");
+        System.out.print("Choose an option [1-4] :");
 
         int chosenInput= myScanner.nextInt();
-        takeInput(chosenInput);
+        try {
+            takeInput(chosenInput);
+        } catch (MyCustomExpception e) {
+            // TODO Auto-generated catch block
+            System.out.println("The SQL Exception is "+e.getMessage());
+        }
 
     }
     private void displayReceipt() {
@@ -90,7 +97,7 @@ public class POSWithDB {
             System.out.println("******************************");
             showMenu();
         // if someine wants to show a receipt without paying, the customerAmount variable would ideally be zero as specified in the makePayment() function 
-        }else if((customerAmount>0) == false){
+        }else if(!(customerAmount>0)){
             System.out.println("******************************");
             System.out.println("Kindly make payment first");
             System.out.println("******************************");
@@ -99,7 +106,7 @@ public class POSWithDB {
             System.out.println("Item Code   Quantity   Unit Price   TotalValue");
             // I set noItems as a global variable and thi_items too, which tracks the items that were set during the adding of an item
             for(int i=0;i<noItems;i++){
-                System.out.println(thisItems[i].getItemCode()+"              "+thisItems[i].getQuantity()+"           "+thisItems[i].getUnitPrice()+"                 "+thisItems[i].getTotalPrices());
+                System.out.println(thisItems.get(i).getItemCode()+"              "+thisItems.get(i).getQuantity()+"           "+thisItems.get(i).getUnitPrice()+"                 "+thisItems.get(i).getTotalPrices());
             }
             System.out.println("*******************************************************************");
             System.out.println("Total:      "+totalPrice);
@@ -108,17 +115,33 @@ public class POSWithDB {
             System.out.println("Change:     "+change);
             System.out.println("*******************************************************************");
             System.out.println("THANK YOU FOR SHOPPING WITH US");
-            System.out.println("*******************************************************************");            
+            System.out.println("*******************************************************************");     
+            showMenu();       
+        }
+    }
+    public void displayPurchases(){
+        ItemDB db = new ItemDB();
+        String query = "SELECT * FROM items";
+        ResultSet resultSet = db.exequteQuery(query);
+        try {
+            while(resultSet.next()){
+                System.out.println(resultSet.getString("item_name")+"=>"+resultSet.getString("item_price")+"=>"+resultSet.getString("item_quantity"));
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            System.out.println("The SQL Exception is "+e.getMessage());
         }
     }
 
-    private void takeInput(int chosenInput) {
-        if(chosenInput == 1){
+    private void takeInput(int chosenInput) throws MyCustomExpception{
+        if(ValidateInput.validateInt(chosenInput) == 1){
             addItem();
-        }else if(chosenInput ==2){
+        }else if(ValidateInput.validateInt(chosenInput) ==2){
             makePayment(false,null,0);
-        }else if(chosenInput == 3){
+        }else if(ValidateInput.validateInt(chosenInput) == 3){
             displayReceipt();
+        }else if(ValidateInput.validateInt(chosenInput) == 4){
+            displayPurchases();
         }else{
             System.out.println("******************************");
             System.out.println("Invalid choice, choose another option");
@@ -126,12 +149,12 @@ public class POSWithDB {
         }
     }
     // }
-    private void makePayment(boolean fromAddItem,Item[] items,int nItems) {
+    private void makePayment(boolean fromAddItem,List<Item> items,int nItems) {
         // set the total price variable
         if(nItems>0 && fromAddItem == true){            
             // get the length of the array
             for(int i=0;i<nItems;i++){
-                pricePerItem=(items[i].getUnitPrice()*items[i].getQuantity());
+                pricePerItem=(items.get(i).getUnitPrice()*items.get(i).getQuantity());
                 totalPrice+=pricePerItem;
             }
         }else if(fromAddItem ==false && totalPrice>0){
@@ -160,34 +183,24 @@ public class POSWithDB {
         // showMenu();
     }
     private void addItem() {
-        System.out.print("How many items do you want to enter: ");
-        int nItems=myScanner.nextInt();
-        myScanner.nextLine();
-        Item[] items= new Item[nItems];
-        for(int i=0;i<nItems;i++){
-            System.out.print("Enter the item Name "+(i+1)+": ");
-            String itemName=myScanner.nextLine();
-            System.out.print("Enter the item Quantity "+(i+1)+": ");
-            int quantity=myScanner.nextInt();
-            System.out.print("Enter the item Price "+(i+1)+": ");
-            int unitPrice=myScanner.nextInt();
-            myScanner.nextLine();
-            double totalPrice=(double)quantity*(double)unitPrice;
-            // Item item = new Item(itemName, quantity, unitPrice,totalPrice);
-            // getItem(item);            
-        }
-        
+        ItemDB db = new ItemDB();
+        // lets come up with a prepared statement that will take in user multi-input
+        String insertQuery = "INSERT INTO items(item_name,item_price,item_quantity) VALUES(?,?,?);";
+        int affectedRows =db.prepare(insertQuery,myScanner);
+
+        // lets get all the items through the global variable madeItems in the ItemDB class
+        List<Item> madeItems = db.getMadeItems();
+
         // set the item object
-        thisItems=items;
+        thisItems=madeItems;
         // set the number of items
-        noItems=nItems;
+        noItems=affectedRows;
         System.out.println("******************************");
         System.out.println("Item has been added successfuly");
         System.out.println("******************************");
-        
         // close the scanner
-        makePayment(true,items,nItems);        
-        showMenu();    
+        makePayment(true,thisItems,affectedRows);        
+        showMenu();   
         
            
         

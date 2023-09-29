@@ -24,7 +24,7 @@ public class WorkingWithFIles {
                 while((line=bufferedReader.readLine())!=null){
                     lines.add(line);
                 }
-                myScanner.close();;
+                myScanner.close();
                 System.out.print("Enter a number between (1-10): ");
                 int quoteIndex = myScanner.nextInt();
                 System.out.println(lines.get(quoteIndex-1));

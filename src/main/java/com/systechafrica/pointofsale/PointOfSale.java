@@ -155,10 +155,7 @@ public class PointOfSale {
         System.out.println("******************************");
         // close the scanner
         makePayment(true,items,nItems);        
-        showMenu();        
-        
-           
-        
+        showMenu();     
              
     }
     public static void main(String[] args) {
