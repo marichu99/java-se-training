@@ -120,7 +120,4 @@ public class UserDBPractice implements UserController {
         return 0;
     }
 
-    
-
-  
 }

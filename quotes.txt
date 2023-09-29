@@ -1,0 +1,7 @@
+Replace "jdbc:mysql://localhost:3306/your_database_name", "your_username", "your_password", "your_table_name", "column1", "column2", "parameter_value1", and "parameter_value2" with your actual database connection details, table/column names, and values.
+
+Create an SQL query string by concatenating the parameter values directly into the query.
+
+Execute the query using statement.executeUpdate() to insert the data into the table.
+
+Please be aware that this approach is vulnerable to SQL injection if the parameter values come from untrusted sources. Using prepared statements is a safer and recommended way to interact with databases to prevent such security risks.

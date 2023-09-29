@@ -9,6 +9,5 @@ public interface UserController {
    ResultSet exequteQuery(String query);
    int executeUpdate(String query);
    int prepare(String query,Scanner myScanner);
-
    void close();
 }

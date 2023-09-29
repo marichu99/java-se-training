@@ -5,7 +5,7 @@ import com.systechafrica.part3.exceptionhandling.MyCustomExpception;
 public class ValidateInput{
     public static final String validate(String input) throws MyCustomExpception{
         if(input!=null && input.length()>0){
-            return "valid";
+            return input;
         }
         throw new MyCustomExpception("Kindly pass in some data");
     }

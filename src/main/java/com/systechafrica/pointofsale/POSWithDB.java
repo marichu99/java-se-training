@@ -31,7 +31,7 @@ public class POSWithDB {
         System.out.print("Enter your password: ");
         String inputPass=myScanner.nextLine();        
         // push this data to the db
-        String insertQuery = "INSERT INTO users(user_name,password) VALUES("+inputUserName+","+inputPass+");";
+        String insertQuery = "INSERT INTO users(user_name,password) VALUES('"+inputUserName+"','"+inputPass+"');";
         int noInsertedRecords = db.executeUpdate(insertQuery);  
         // if we have inserted the record then we can now login
         if(noInsertedRecords >0){
@@ -40,17 +40,19 @@ public class POSWithDB {
             System.out.println("*************************************");
             System.out.println("Kindly enter your password "+inputUserName);
             // let us retrieve the password of the username
-            String selectPassQuery = "SELECT password FROM users WHERE user_name = "+inputUserName;
+            String selectPassQuery = "SELECT password FROM users WHERE user_name = '"+inputUserName+"'";
             ResultSet passResult = db.exequteQuery(selectPassQuery);
             try {
-                dbPassword = passResult.getString("password");
+                if(passResult.next()){                    
+                    dbPassword = passResult.getString("password");
+                }
             } catch (SQLException e) {
                 System.out.println("The SQL Exception is "+e.getMessage());
             }
             for(int i=0;i<=NO_TRIALS+1;i++){        
                 if(i<=3){                    
                     // lets ask the user for the password
-                    System.out.print("Enter your password");
+                    System.out.print("Enter your password: ");
                     String inputPassword = myScanner.nextLine();
                     if(ValidateInput.validate(inputPassword).equals(dbPassword)){
                         System.out.println("Welcome to the System");
@@ -197,8 +199,12 @@ public class POSWithDB {
     }
     public static void main(String[] args) {
         // Scanner myscanner= new Scanner(System.in);
-        PointOfSale pos = new PointOfSale();
-        pos.userLogin();
+        POSWithDB pos = new POSWithDB();
+        try {
+            pos.userLogin();
+        } catch (MyCustomExpception e) {
+            System.out.println("The custom exception is "+e.getMessage());
+        }
 
         // myscanner.close();
         /* 
