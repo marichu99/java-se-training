@@ -12,10 +12,8 @@ public class WorkingWithNewDateTime {
         // workingWithLocalDate();
         // workingWithLocalDateTime();
         workingWithLocalTime();
-        
     }
-
-    private static void workingWithLocalTime() {
+        private static void workingWithLocalTime() {
         LocalTime currentTime = LocalTime.now();
         System.out.println(currentTime);
         LocalTime startDate = LocalTime.of(8, 0, 0);
