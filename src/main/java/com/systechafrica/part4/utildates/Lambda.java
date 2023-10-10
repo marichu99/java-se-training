@@ -20,6 +20,14 @@ public class Lambda {
     StudentCompare studentCompare = ( student3,   student4)->{
         return student3.equals(student4);
     };
+    CompareStudent<Student,Student,Boolean> stCompare = (studentOne,studentTwo)->{
+        String stOneName= studentOne.getFirstName();
+        String stTwoName = studentTwo.getFirstName();
+
+        return stOneName.equals(stTwoName);
+    };
+    // now lets compare
+    stCompare.compare(student, student2);
 
     }
 }
