@@ -29,14 +29,14 @@ public class Stack {
         items[topOfStack]=item;
         return true;
     }
-     public synchronized int pop(int item){
+     public synchronized int pop(){
         // check if the stack is full
         if(isEmpty()){
             return Integer.MIN_VALUE;
         }
         
         // GET THE ITEM at the top of the stack
-         item = items[topOfStack];
+        int item = items[topOfStack];
 
         // reset item at the top of the stack
         try {
